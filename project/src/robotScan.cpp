@@ -12,13 +12,15 @@ class robotScan : public rclcpp::Node{
         sub = this->create_subscription<sensor_msgs::msg::LaserScan>("scan", 10, std::bind(&robotScan::scanCallback, this, std::placeholders::_1));
 
     private:
-        void processScan(const sensor_msgs::msg::LaserSCan::SharedPtr msg){
+        void processScan(const sensor_msgs::msg::LaserScan::SharedPtr msg){
             // process the scan and find the pillar
             // find the pillar
             std::vector<float> ranges = msg->ranges;
             std::vector<float>::iterator it = std::min_element(ranges.begin(), ranges.end());
             int index = std::distance(ranges.begin(), it);
-            std::cout << "The pillar is at " << index << std::endl;
+            for(int i = 0; i < numOfPillars; i++){
+                std::cout << "The pillar(s) are located at " << index(i) << std::endl;
+            }
             std_msgs::msg::Float32 msg;
             msg.data = index;
             publisher_->publish(msg);
@@ -27,5 +29,3 @@ class robotScan : public rclcpp::Node{
         rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr publisher_;
         rclcpp::Subscription<sensor_msgs::msg::LaserScan>::SharedPtr subscription_;
 };
-
-
