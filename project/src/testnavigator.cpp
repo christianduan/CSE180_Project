@@ -15,11 +15,11 @@ std::random_device rd;
 std::mt19937 gen(rd());
 std::uniform_real_distribution<double> dis(-0.25, 0.25);
 double randNum = dis(gen);
-bool tl = true; bool tm = false; bool tr = true; bool ml = false; bool mm = false; 
-bool mr = false; bool bl = false; bool bm = false; bool br = true;
-int tl_x = -1; int tl_y = 1; int tm_x = 0; int tm_y = 1; int tr_x = 1; int tr_y = 1;
-int ml_x = -1; int ml_y = 0; int mm_x = 0; int mm_y = 0; int mr_x = 1; int mr_y = 0;
-int bl_x = -1; int bl_y = -1; int bm_x = 0; int bm_y = -1; int br_x = 1; int br_y = -1;
+bool tl = false; bool tm = false; bool tr = true; bool ml = false; bool mm = false; 
+bool mr = false; bool bl = false; bool bm = false; bool br = false;
+double tl_x = -1; double tl_y = 1; double tm_x = 0; double tm_y = 1; double tr_x = 1.25; double tr_y = 0.95;
+double ml_x = -1; double ml_y = 0; double mm_x = 0; double mm_y = 0; double mr_x = 1; double mr_y = 0;
+double bl_x = -1; double bl_y = -1; double bm_x = 0; double bm_y = -1; double br_x = 1; double br_y = -1;
 
 // amcl pose 
 void amclPose(const geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr msg){
@@ -58,14 +58,10 @@ int main(int argc, char **argv){
   rclcpp::init(argc, argv);
   Navigator navigator(true);
   int pillarHeight = 0.25;
-  double tolerance = 0.25;
 
   // amcl pose subscriber
   auto node = std::make_shared<rclcpp::Node>("amcl_sub");
   auto subscription = node->create_subscription<geometry_msgs::msg::PoseWithCovarianceStamped>("/amcl_pose", rclcpp::QoS(rclcpp::SystemDefaultsQoS()),std::bind(&amclPose, std::placeholders::_1));
-
-  double amcX = x;
-  double amcY = y;
 
   // initialize the pillars
   geometry_msgs::msg::Pose::SharedPtr p0 = std::make_shared<geometry_msgs::msg::Pose>();
@@ -276,9 +272,6 @@ int main(int argc, char **argv){
   }
   if(br == true){
     std::cout << "A square pillar is at " << br_x << ", " << br_y << std::endl;
-  }
-  else{
-    std::cout << "No square pillars were found" << std::endl;
   }
 
   rclcpp::shutdown();
