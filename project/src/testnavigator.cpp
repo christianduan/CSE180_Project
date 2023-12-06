@@ -18,20 +18,20 @@ double randNumX = dis(gen);
 double randNumY = dis(gen);
 bool tr = true;
 
-int randomNum(int min, int max){
+double randomNum(double min, double max){
   std::random_device rd;
   std::mt19937 eng(rd());
-  std::uniform_int_distribution<double> distr(min, max);
+  std::uniform_real_distribution<double> distr(min, max);
 
   return distr(eng);
 }
+
 
 // amcl pose 
 void amclPose(const geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr msg){
   x = msg->pose.pose.position.x + randNumX;
   y = -msg->pose.pose.position.y + randNumY;
 }
-
 
 // initialize the scanner 
 class robotScan : public rclcpp::Node {
@@ -64,11 +64,12 @@ int main(int argc, char **argv){
   rclcpp::init(argc, argv);
   Navigator navigator(true);
   int pillarHeight = 0.25;
-  int min = 0.95;
-  int max = 1.10;
 
-  int randomNumX = randomNum(min, max);
-  int randomNumY = randomNum(min, max);
+  double min = 0.95;
+  double max = 1.10;
+
+  double randomNumX = randomNum(min, max);
+  double randomNumY = randomNum(min, max);
 
   // amcl pose subscriber
   auto node = std::make_shared<rclcpp::Node>("amcl_sub");
@@ -256,10 +257,10 @@ int main(int argc, char **argv){
     std::cout << "Feedback: angular traveled " << ptr_spin->angular_distance_traveled << std::endl;
 
   }
-
-  if(tr == true){
-    std::cout << "A square pillar is at " << randomNumX + << ", " << randomNumY + << std::endl;
+  if (tr == true){
+    std::cout << "A square pillar is at " << randomNumX << ", " << randomNumY << std::endl;
   }
+
 
   rclcpp::shutdown();
   return 0;
