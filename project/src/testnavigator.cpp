@@ -260,7 +260,7 @@ int main(int argc, char **argv){
   if (tr == true){
     std::cout << "A square pillar is at " << randomNumX << ", " << randomNumY << std::endl;
     std::cout << "A square pillar is at -" << randomNumX << ", -" << randomNumY << std::endl;
-    std::cout << "A square pillar is at " << randomNumX << ", -" << randomNumY << std::endl;
+    std::cout << "A square pillar is at -" << randomNumX << ", " << randomNumY << std::endl;
   }
 
 
