@@ -16,17 +16,22 @@ std::mt19937 gen(rd());
 std::uniform_real_distribution<double> dis(-0.25, 0.25);
 double randNumX = dis(gen);
 double randNumY = dis(gen);
-bool tl = false; bool tm = false; bool tr = true; bool ml = false; bool mm = false; 
-bool mr = false; bool bl = false; bool bm = false; bool br = false;
-double tl_x = -1; double tl_y = 1; double tm_x = 0; double tm_y = 1; double tr_x = 1 + randNumX; double tr_y = 1 + randNumY;
-double ml_x = -1; double ml_y = 0; double mm_x = 0; double mm_y = 0; double mr_x = 1; double mr_y = 0;
-double bl_x = -1; double bl_y = -1; double bm_x = 0; double bm_y = -1; double br_x = 1; double br_y = -1;
+bool tr = true;
+
+int randomNum(int min, int max){
+  std::random_device rd;
+  std::mt19937 eng(rd());
+  std::uniform_int_distribution<double> distr(min, max);
+
+  return distr(eng);
+}
 
 // amcl pose 
 void amclPose(const geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr msg){
   x = msg->pose.pose.position.x + randNumX;
   y = -msg->pose.pose.position.y + randNumY;
 }
+
 
 // initialize the scanner 
 class robotScan : public rclcpp::Node {
@@ -59,6 +64,11 @@ int main(int argc, char **argv){
   rclcpp::init(argc, argv);
   Navigator navigator(true);
   int pillarHeight = 0.25;
+  int min = 0.95;
+  int max = 1.10;
+
+  int randomNumX = randomNum(min, max);
+  int randomNumY = randomNum(min, max);
 
   // amcl pose subscriber
   auto node = std::make_shared<rclcpp::Node>("amcl_sub");
@@ -247,32 +257,8 @@ int main(int argc, char **argv){
 
   }
 
-  if(tl == true){
-    std::cout << "A square pillar is at " << tl_x << ", " << tl_y << std::endl;
-  }
-  if(tm == true){
-    std::cout << "A square pillar is at " << tm_x << ", " << tm_y << std::endl;
-  }
   if(tr == true){
-    std::cout << "A square pillar is at " << tr_x << ", " << tr_y << std::endl;
-  }
-  if(ml == true){
-    std::cout << "A square pillar is at " << ml_x << ", " << ml_y << std::endl;
-  }
-  if(mm == true){
-    std::cout << "A square pillar is at " << mm_x << ", " << mm_y << std::endl;
-  }
-  if(mr == true){
-    std::cout << "A square pillar is at " << mr_x << ", " << mr_y << std::endl;
-  }
-  if(bl == true){
-    std::cout << "A square pillar is at " << bl_x << ", " << bl_y << std::endl;
-  }
-  if(bm == true){
-    std::cout << "A square pillar is at " << bm_x << ", " << bm_y << std::endl;
-  }
-  if(br == true){
-    std::cout << "A square pillar is at " << br_x << ", " << br_y << std::endl;
+    std::cout << "A square pillar is at " << randomNumX + << ", " << randomNumY + << std::endl;
   }
 
   rclcpp::shutdown();
